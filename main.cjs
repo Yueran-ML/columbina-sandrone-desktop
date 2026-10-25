@@ -15,6 +15,9 @@ const file = path.join(app.getPath('userData'), 'state.json');
 let state, persona, manifest, pet, panel, tray, saveTimer, quitting = false;
 const pets = new Map(), characters = new Map();
 let dragging = null, chatBusy = false, workMode = 'idle';
+// 跟随 Columbina 桌面端：它写出的任务状态文件、上次看到的状态和对文件夹的监视。
+const columbinaFile = path.join(app.getPath('appData'), 'Columbina', 'pet-state.json');
+let columbinaSeen = null, columbinaWatch = null;
 const roamDirections = { columbina: 1, sandrone: -1 };
 const recentPats = { columbina: [], sandrone: [] };
 const sceneCooldowns = new Map();
@@ -62,6 +65,35 @@ function speak(key, animation = 'idle', characterId = 'columbina') {
 }
 function speakText(text, animation, characterId) {
   for (const w of windows) if (!w.isDestroyed() && (w.characterId === characterId || (!w.characterId && characterId === 'columbina'))) w.webContents.send('companion:interaction', { text, animation, characterId });
+}
+function alive(pid) {
+  try { process.kill(pid, 0); return true; } catch (error) { return error?.code === 'EPERM'; }
+}
+/** 读一次 Columbina 的任务状态；有变化时切换动作，等批准、出错、做完时说一句。 */
+function followColumbina() {
+  if (!state.settings.followColumbina) return;
+  let text = null;
+  try { text = fs.readFileSync(columbinaFile, 'utf8'); } catch { /* 还没有文件：当作空闲 */ }
+  const seen = core.columbinaState(text, alive);
+  if (!seen) return;
+  const key = seen.state + ' ' + seen.label;
+  if (key === columbinaSeen) return;
+  columbinaSeen = key;
+  workMode = seen.mode;
+  publish();
+  if (seen.state === 'waiting') speakText(seen.label ? `要用 ${seen.label}，等你点头。` : '有件事等你点头。', 'waiting', 'columbina');
+  else if (seen.state === 'failed') speakText('那边遇到了一点难题。', 'failed', 'columbina');
+  else if (seen.state === 'done') speakText('那边做完了。', 'wave', 'columbina');
+}
+/** 按设置开始或停止跟随。停止时回到闲坐。 */
+function watchColumbina() {
+  columbinaWatch?.close();
+  columbinaWatch = null;
+  columbinaSeen = null;
+  if (!state.settings.followColumbina) { workMode = 'idle'; return; }
+  // 监视可能漏掉变化，主循环每两秒也会读一次。
+  try { columbinaWatch = fs.watch(path.dirname(columbinaFile), () => followColumbina()); } catch { /* 文件夹还没有 */ }
+  followColumbina();
 }
 function linkedScene(scene, initiatingCharacter = 'columbina') {
   if (!state.companions.sandroneEnabled || (!smoke && (!pets.get('sandrone')?.isVisible() || !pet?.isVisible()))) return false;
@@ -296,7 +328,9 @@ function installIPC() {
   ipc('panel', tab => { openPanel(['home', 'chat', 'focus', 'settings'].includes(tab) ? tab : 'home'); return true; });
   ipc('settings', patch => {
     if (!patch || typeof patch !== 'object' || Array.isArray(patch)) throw new Error('设置格式不正确。');
+    const following = state.settings.followColumbina;
     state.settings = core.normalizeSettings({ ...state.settings, ...patch });
+    if (state.settings.followColumbina !== following) watchColumbina();
     applyPetSettings(); updateTray(); persist(); publish(); return snapshot();
   });
   ipc('timer', payload => {
@@ -328,6 +362,11 @@ function installIPC() {
   });
   ipc('workMode', value => {
     if (!['idle', 'waiting', 'thinking', 'review', 'failed'].includes(value)) throw new Error('不支持的工作状态。');
+    // 手动选了动作，就不再跟随 Columbina。
+    if (state.settings.followColumbina) {
+      state.settings.followColumbina = false;
+      watchColumbina(); persist();
+    }
     workMode = value; publish(); return value;
   });
   ipc('contextMenu', (_payload, event) => { contextMenu(BrowserWindow.fromWebContents(event.sender)?.characterId || 'columbina'); return true; });
@@ -444,6 +483,8 @@ else {
     }
     if (loaded.warning) pet.webContents.once('did-finish-load', () => broadcast('companion:notice', { text: loaded.warning, error: true }));
     setInterval(() => { settle(); if (state.timer) publish(); }, 1000);
+    watchColumbina();
+    setInterval(followColumbina, 2000);
     setInterval(() => { core.updateWellbeing(state); persist(); publish(); }, 60000);
     setInterval(() => {
       if (dragging) return;

@@ -91,3 +91,30 @@ test('local dialogue uses reviewed rules and does not invent an LLM response', (
   assert.match(c.localReply('你好', persona), /你好|回来了/);
   assert.match(c.localReply('说说桑多涅剧情', persona), /不会补写/);
 });
+
+test('Columbina task state maps to work modes, and a dead writer or bad file is handled', () => {
+  const alive = pid => pid === 42;
+  const file = value => JSON.stringify({ version: 1, at: 1, pid: 42, label: '', ...value });
+  assert.deepEqual(c.columbinaState(file({ state: 'thinking' }), alive), { state: 'thinking', mode: 'thinking', label: '' });
+  assert.deepEqual(c.columbinaState(file({ state: 'review', label: 'read' }), alive), { state: 'review', mode: 'review', label: 'read' });
+  assert.deepEqual(c.columbinaState(file({ state: 'waiting', label: 'shell\nrm' }), alive), { state: 'waiting', mode: 'waiting', label: 'shell rm' });
+  assert.deepEqual(c.columbinaState(file({ state: 'failed', label: 'AUTH' }), alive), { state: 'failed', mode: 'failed', label: 'AUTH' });
+  assert.deepEqual(c.columbinaState(file({ state: 'done' }), alive), { state: 'done', mode: 'idle', label: '' });
+  assert.equal(c.columbinaState(file({ state: 'waiting', label: 'x'.repeat(100) }), alive).label.length, 40);
+  assert.equal(c.columbinaState(file({ state: 'waiting', label: 7 }), alive).label, '');
+  // A writer that is gone, no pid, or no file at all: Columbina rests.
+  const resting = { state: 'idle', mode: 'idle', label: '' };
+  assert.deepEqual(c.columbinaState(file({ state: 'thinking', pid: 7 }), alive), resting);
+  assert.deepEqual(c.columbinaState(file({ state: 'thinking', pid: '42' }), alive), resting);
+  assert.deepEqual(c.columbinaState(null, alive), resting);
+  // A file that is not one: nothing changes.
+  for (const text of ['{', '[]', 'null', file({ state: 'dancing' }), file({ state: 'thinking', version: 2 }), file({ state: 'toString' })]) {
+    assert.equal(c.columbinaState(text, alive), null, text);
+  }
+});
+
+test('following Columbina is a setting that is off unless chosen', () => {
+  assert.equal(c.normalizeSettings({}).followColumbina, false);
+  assert.equal(c.normalizeSettings({ followColumbina: true }).followColumbina, true);
+  assert.equal(c.normalizeSettings({ followColumbina: 'yes' }).followColumbina, false);
+});

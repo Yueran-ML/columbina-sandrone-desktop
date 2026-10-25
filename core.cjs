@@ -8,12 +8,12 @@ const number = (n, fallback, lo, hi) => Number.isFinite(n) ? clamp(n, lo, hi) : 
 const settingsDefault = {
   scale: 1, opacity: 1, animationSpeed: 1, alwaysOnTop: true,
   followGaze: true, roam: false, reduceMotion: false, sound: false,
-  snap: true, focusMinutes: 25, breakMinutes: 5
+  snap: true, focusMinutes: 25, breakMinutes: 5, followColumbina: false
 };
 
 function normalizeSettings(input = {}) {
   const value = { ...settingsDefault };
-  for (const key of ['alwaysOnTop', 'followGaze', 'roam', 'reduceMotion', 'sound', 'snap']) {
+  for (const key of ['alwaysOnTop', 'followGaze', 'roam', 'reduceMotion', 'sound', 'snap', 'followColumbina']) {
     if (typeof input[key] === 'boolean') value[key] = input[key];
   }
   for (const [key, lo, hi] of [
@@ -182,4 +182,23 @@ function localReply(text, persona) {
   return defaults[Math.floor(Math.random() * defaults.length)];
 }
 
-module.exports = { clamp, normalizeSettings, normalizeEndpoint, defaultState, normalizeState, loadState, saveState, remaining, timerAction, settleTimer, updateWellbeing, careAction, constrainPosition, localReply };
+// Columbina 桌面端写出的任务状态（见其仓库 docs/pets.md）对应到“工作时的样子”。
+// done 表示一轮刚做完：动作回到闲坐，另由主进程播一次招呼。
+const COLUMBINA_MODES = { idle: 'idle', thinking: 'thinking', review: 'review', waiting: 'waiting', failed: 'failed', done: 'idle' };
+const AT_REST = { state: 'idle', mode: 'idle', label: '' };
+
+/**
+ * 读 Columbina 的 pet-state.json。文件内容不对返回 null（保持现状）；
+ * 写文件的 Columbina 进程已经不在（如崩溃）时视为空闲。alive(pid) 判断进程是否还在。
+ */
+function columbinaState(text, alive) {
+  if (text === null) return AT_REST;
+  let value;
+  try { value = JSON.parse(text); } catch { return null; }
+  if (!value || typeof value !== 'object' || value.version !== 1 || !Object.hasOwn(COLUMBINA_MODES, value.state)) return null;
+  if (!Number.isInteger(value.pid) || !alive(value.pid)) return AT_REST;
+  const label = typeof value.label === 'string' ? Array.from(value.label.replace(/[\u0000-\u001f\u007f]+/g, ' ').trim()).slice(0, 40).join('') : '';
+  return { state: value.state, mode: COLUMBINA_MODES[value.state], label };
+}
+
+module.exports = { columbinaState, clamp, normalizeSettings, normalizeEndpoint, defaultState, normalizeState, loadState, saveState, remaining, timerAction, settleTimer, updateWellbeing, careAction, constrainPosition, localReply };
