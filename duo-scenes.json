@@ -2,36 +2,56 @@
   "encounter": [
     {
       "character": "columbina",
-      "text": "桑多涅，这里还有一个位置。",
+      "text": "桑多涅，这里给你留了位置。挨着我坐吧。",
       "animation": "wave"
     },
     {
       "character": "sandrone",
-      "text": "看见了。我坐这里，茶杯可别碰倒了。",
+      "text": "……谁要挨着你。我只是正好坐这边。",
       "animation": "wave"
+    },
+    {
+      "character": "columbina",
+      "text": "嗯，正好。你的茶，我也倒好了。",
+      "animation": "wave"
+    },
+    {
+      "character": "sandrone",
+      "text": "哼。……温度刚好。",
+      "animation": "thinking"
     }
   ],
   "rest": [
     {
       "character": "sandrone",
-      "text": "暂时停一下。茶要趁热喝。",
+      "text": "停一下。茶泡多了一杯，不喝就浪费了。",
       "animation": "waiting"
     },
     {
       "character": "columbina",
-      "text": "好。你也一起歇一会儿吧。",
+      "text": "是特意给我泡的吧？谢谢你，小猫。",
+      "animation": "waiting"
+    },
+    {
+      "character": "sandrone",
+      "text": "不许那样叫我。……喝完再说。",
       "animation": "waiting"
     }
   ],
   "focusStart": [
     {
       "character": "sandrone",
-      "text": "把要做的事选好。现在开始。",
+      "text": "要专心了。你也别一直看我。",
       "animation": "thinking"
     },
     {
       "character": "columbina",
-      "text": "嗯，我们也安静一会儿。",
+      "text": "好。那我就安静地靠着你。",
+      "animation": "thinking"
+    },
+    {
+      "character": "sandrone",
+      "text": "……随你。别把我的袖子压皱。",
       "animation": "thinking"
     }
   ],
@@ -43,8 +63,18 @@
     },
     {
       "character": "sandrone",
-      "text": "可以。先保存，再来喝茶。",
+      "text": "终于。……我才没有在等。",
       "animation": "wave"
+    },
+    {
+      "character": "columbina",
+      "text": "可你刚才偷看了我三次哦。",
+      "animation": "wave"
+    },
+    {
+      "character": "sandrone",
+      "text": "那是在看时间。先保存，再来喝茶。",
+      "animation": "thinking"
     }
   ],
   "breakDone": [
@@ -55,55 +85,75 @@
     },
     {
       "character": "sandrone",
-      "text": "由你决定。要继续的话，就选好下一件事。",
+      "text": "由你决定。……反正我会在旁边。",
       "animation": "thinking"
     }
   ],
   "shareFruit": [
     {
       "character": "columbina",
-      "text": "这个果子很甜。你也尝尝。",
+      "text": "这个果子很甜。来，张嘴。",
       "animation": "wave"
     },
     {
       "character": "sandrone",
-      "text": "放进小碟里吧。果汁滴到袖口可不好收拾。",
+      "text": "我自己有手。……就这一次。",
       "animation": "wave"
+    },
+    {
+      "character": "columbina",
+      "text": "甜吗？",
+      "animation": "wave"
+    },
+    {
+      "character": "sandrone",
+      "text": "还行。……再给我一块。",
+      "animation": "waiting"
     }
   ],
   "shareBread": [
     {
       "character": "sandrone",
-      "text": "面包放在碟子里，别弄得到处都是。",
+      "text": "面包烤多了。给你，别误会。",
       "animation": "wave"
     },
     {
       "character": "columbina",
-      "text": "我会小心。也给你留了一块。",
+      "text": "还是热的。你算好了我回来的时间吧？",
       "animation": "wave"
+    },
+    {
+      "character": "sandrone",
+      "text": "……计算误差而已。",
+      "animation": "waiting"
     }
   ],
   "boundary": [
     {
       "character": "sandrone",
-      "text": "够了。这样可不算打招呼。",
+      "text": "够了。摸头这种事，只有她可以。",
       "animation": "waiting"
     },
     {
       "character": "columbina",
-      "text": "我们已经看见你了。先停一下吧。",
+      "text": "她害羞了。先停一下吧，好吗？",
       "animation": "waiting"
     }
   ],
   "farewell": [
     {
       "character": "columbina",
-      "text": "那就下次见。我们也去走一走。",
+      "text": "那就下次见。我们也去散散步。",
       "animation": "wave"
     },
     {
       "character": "sandrone",
-      "text": "去吧。下回见面，再慢慢聊。",
+      "text": "她非要牵手，我只好陪她走一圈。",
+      "animation": "wave"
+    },
+    {
+      "character": "columbina",
+      "text": "明明是你先伸的手。",
       "animation": "wave"
     }
   ]
