@@ -1,0 +1,15 @@
+{
+  "image": "sprite-sheet-sandrone.png", "width": 1536, "height": 1040,
+  "cellWidth": 192, "cellHeight": 208, "columns": 8,
+  "animations": {
+    "idle": { "row": 0, "frames": 6, "fps": 5 },
+    "runRight": { "row": 1, "frames": 8, "fps": 10 },
+    "runLeft": { "row": 2, "frames": 8, "fps": 10 },
+    "wave": { "row": 3, "frames": 4, "fps": 6 },
+    "thinking": { "row": 4, "frames": 6, "fps": 5 },
+    "waiting": { "row": 0, "frames": 6, "fps": 4 },
+    "review": { "row": 4, "frames": 6, "fps": 5 },
+    "failed": { "row": 4, "frames": 6, "fps": 4 },
+    "jump": { "row": 3, "frames": 4, "fps": 6 }
+  }
+}

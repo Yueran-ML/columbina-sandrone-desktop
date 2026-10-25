@@ -1,0 +1,19 @@
+{
+  "name": "columbina-moonlit-companion",
+  "version": "1.0.0",
+  "description": "哥伦比娅与桑多涅 · 月下同伴 — linked Windows desktop companions",
+  "main": "main.cjs",
+  "private": true,
+  "author": "Local fan project",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test test/*.test.cjs",
+    "check": "node --check main.cjs && node --check preload.cjs && node --check core.cjs && node --check renderer.js",
+    "build:portable": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-portable.ps1",
+    "pack:source": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-deliverables.ps1 -SourceOnly",
+    "pack:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-deliverables.ps1"
+  },
+  "engines": { "node": ">=22.12.0" },
+  "devDependencies": { "electron": "43.3.0" }
+}

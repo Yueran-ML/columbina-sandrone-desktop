@@ -1,0 +1,110 @@
+{
+  "encounter": [
+    {
+      "character": "columbina",
+      "text": "桑多涅，这里还有一个位置。",
+      "animation": "wave"
+    },
+    {
+      "character": "sandrone",
+      "text": "看见了。我坐这里，茶杯可别碰倒了。",
+      "animation": "wave"
+    }
+  ],
+  "rest": [
+    {
+      "character": "sandrone",
+      "text": "暂时停一下。茶要趁热喝。",
+      "animation": "waiting"
+    },
+    {
+      "character": "columbina",
+      "text": "好。你也一起歇一会儿吧。",
+      "animation": "waiting"
+    }
+  ],
+  "focusStart": [
+    {
+      "character": "sandrone",
+      "text": "把要做的事选好。现在开始。",
+      "animation": "thinking"
+    },
+    {
+      "character": "columbina",
+      "text": "嗯，我们也安静一会儿。",
+      "animation": "thinking"
+    }
+  ],
+  "focusDone": [
+    {
+      "character": "columbina",
+      "text": "这一段结束了。桑多涅，现在可以说话了。",
+      "animation": "wave"
+    },
+    {
+      "character": "sandrone",
+      "text": "可以。先保存，再来喝茶。",
+      "animation": "wave"
+    }
+  ],
+  "breakDone": [
+    {
+      "character": "columbina",
+      "text": "休息时间结束了。要继续吗？",
+      "animation": "wave"
+    },
+    {
+      "character": "sandrone",
+      "text": "由你决定。要继续的话，就选好下一件事。",
+      "animation": "thinking"
+    }
+  ],
+  "shareFruit": [
+    {
+      "character": "columbina",
+      "text": "这个果子很甜。你也尝尝。",
+      "animation": "wave"
+    },
+    {
+      "character": "sandrone",
+      "text": "放进小碟里吧。果汁滴到袖口可不好收拾。",
+      "animation": "wave"
+    }
+  ],
+  "shareBread": [
+    {
+      "character": "sandrone",
+      "text": "面包放在碟子里，别弄得到处都是。",
+      "animation": "wave"
+    },
+    {
+      "character": "columbina",
+      "text": "我会小心。也给你留了一块。",
+      "animation": "wave"
+    }
+  ],
+  "boundary": [
+    {
+      "character": "sandrone",
+      "text": "够了。这样可不算打招呼。",
+      "animation": "waiting"
+    },
+    {
+      "character": "columbina",
+      "text": "我们已经看见你了。先停一下吧。",
+      "animation": "waiting"
+    }
+  ],
+  "farewell": [
+    {
+      "character": "columbina",
+      "text": "那就下次见。我们也去走一走。",
+      "animation": "wave"
+    },
+    {
+      "character": "sandrone",
+      "text": "去吧。下回见面，再慢慢聊。",
+      "animation": "wave"
+    }
+  ]
+}

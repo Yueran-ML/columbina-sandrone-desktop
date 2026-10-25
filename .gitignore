@@ -1,0 +1,17 @@
+node_modules/
+portable/
+dist/
+test-output/
+coverage/
+*.log
+*.zip
+.env
+.env.*
+!.env.example
+state.json
+state.json.*
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini

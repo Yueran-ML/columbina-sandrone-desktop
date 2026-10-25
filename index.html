@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; frame-src 'none'">
+  <title>哥伦比娅 · 月下同伴</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="renderer.js" defer></script>
+</head>
+<body>
+  <img id="sprite-loader" src="assets/sprite-sheet.png" alt="" hidden>
+  <div id="pet-view" hidden>
+    <main class="pet-shell">
+      <div class="pet-bubble" id="pet-bubble" role="status">你好。今天想做些什么？</div>
+      <button class="pet-sprite sprite" id="pet-character" aria-label="哥伦比娅：单击轻拍，拖动移动，双击打开小屋"><span class="asset-missing">角色图集正在准备中</span></button>
+      <div class="pet-timer" id="pet-timer" hidden><span class="tiny-moon">☽</span><span id="pet-timer-text">25:00</span></div>
+      <div class="pet-tools" aria-label="同伴工具">
+        <button data-panel="chat" title="对话" aria-label="对话">◌</button>
+        <button data-care="share" title="分享点心" aria-label="分享点心">♧</button>
+        <button data-panel="focus" title="专注计时" aria-label="专注计时">◷</button>
+        <button data-panel="settings" title="偏好设置" aria-label="偏好设置">⚙</button>
+        <button id="pet-hide" title="收起到托盘" aria-label="收起到托盘">−</button>
+      </div>
+    </main>
+  </div>
+  <div id="panel-view" class="panel-shell" hidden>
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-moon">☽</span><div>月下同伴<small>MOONLIT COMPANION</small></div></div>
+      <div class="sidebar-portrait"><div class="portrait-halo"></div><div class="sprite portrait-sprite"><span class="asset-missing">角色图集尚未就绪</span></div></div>
+      <div class="sidebar-name">哥伦比娅<span class="online-dot"></span><small>把片刻安静，留在身旁</small></div>
+      <nav aria-label="主导航">
+        <button data-tab="home" class="active"><span>⌂</span>月下小屋</button>
+        <button data-tab="chat"><span>◌</span>和她说话</button>
+        <button data-tab="focus"><span>◷</span>一起专注</button>
+        <button data-tab="settings"><span>⚙</span>偏好设置</button>
+      </nav>
+      <div class="sidebar-bottom"><span class="moon-line"></span><p>夜色安静，步调由你。</p><small>非官方同人 · 本地桌面应用</small></div>
+    </aside>
+    <div class="main-column">
+      <header class="topbar"><span id="breadcrumb">月下小屋</span><span class="topbar-note">COL U M B I N A <i>✦</i></span></header>
+      <main class="content">
+        <section class="page active" id="page-home" aria-labelledby="home-title">
+          <div class="page-heading"><div><span class="eyebrow">A LITTLE TIME TOGETHER</span><h1 id="home-title">今天，也一起度过吧。</h1><p>聊几句，分享一份点心，或各自安静地做事。</p></div><span class="mode-chip" id="home-mode">本地陪伴</span></div>
+          <div class="home-grid">
+            <div class="hero-card">
+              <div class="hero-stars" aria-hidden="true">✧<span>✦</span><b>·</b></div>
+              <div class="hero-orbit" aria-hidden="true"></div>
+              <div class="sprite hero-sprite"><span class="asset-missing">将角色图集放入 assets/sprite-sheet.png</span></div>
+              <div class="hero-caption"><small>COLUMBINA</small><h2>哥伦比娅</h2><span id="hero-status">安静相伴</span></div>
+              <span class="hero-corner">☽</span>
+            </div>
+            <div class="home-right">
+              <div class="greeting-card"><span class="quote-mark">“</span><p id="home-quote">你好。今天想做些什么？</p><small>角色化创作 · 非游戏原文</small></div>
+              <div class="care-grid">
+                <button class="care-card" data-care="greet"><span>✧</span><strong>打个招呼</strong><small>在这里碰个面</small></button>
+                <button class="care-card" data-care="share"><span>♧</span><strong>分享点心</strong><small>留一份给彼此</small></button>
+                <button class="care-card" data-care="pat"><span>❧</span><strong>轻轻拍拍</strong><small>一点小小互动</small></button>
+                <button class="care-card" data-care="rest"><span>☾</span><strong id="rest-label">一起休息</strong><small>放慢今天的步调</small></button>
+              </div>
+            </div>
+          </div>
+          <div class="stats-row">
+            <div class="stat"><span>精神</span><strong id="energy-value">80<small>/ 100</small></strong><div class="meter"><i id="energy-bar"></i></div></div>
+            <div class="stat"><span>心情</span><strong id="mood-value">78<small>/ 100</small></strong><div class="meter rose"><i id="mood-bar"></i></div></div>
+            <div class="stat"><span>熟悉度</span><strong id="familiarity-value">0<small>/ 100</small></strong><div class="meter silver"><i id="familiarity-bar"></i></div></div>
+          </div>
+          <div class="quiet-note">✦ 这些数值只记录本应用里的相处；离开不会扣分，也不会影响官方游戏。</div>
+          <div class="companion-strip"><span>✧</span><div><strong>桑多涅，也在这里。</strong><small>相遇、点心、休息与专注完成时，两人会自然接话。</small></div><button class="text-button" id="duo-greet">彼此招呼</button><label class="toggle-label"><input type="checkbox" id="sandrone-enabled" checked><span>一同出现</span></label></div>
+          <div class="work-demo"><div><strong>工作时的样子</strong><small>手动演示动画状态</small></div><div class="segmented" id="work-modes"><button data-mode="idle" class="active">闲坐</button><button data-mode="waiting">等候</button><button data-mode="thinking">思考</button><button data-mode="review">阅览</button><button data-mode="failed">遇到难题</button></div></div>
+        </section>
+        <section class="page" id="page-chat" aria-labelledby="chat-title">
+          <div class="page-heading"><div><span class="eyebrow">A CONVERSATION, SOFTLY</span><h1 id="chat-title">想说的，都可以慢慢说。</h1><p id="chat-description">本地规则对话，依据关键词选择预写台词。</p></div><span class="mode-chip" id="chat-mode">本地规则</span></div>
+          <div class="chat-card">
+            <div class="chat-toolbar"><span><i class="online-dot"></i> 哥伦比娅</span><button class="text-button" id="clear-chat">清空记录</button></div>
+            <div class="messages" id="messages" role="log" aria-live="polite"><div class="chat-empty"><span>☽</span><strong>从一句「你好」开始。</strong><p>这里的对话记录保存在这台电脑。</p></div></div>
+            <div class="suggestions"><button data-prompt="今天有点累">今天有点累</button><button data-prompt="一起听听歌吧">聊聊歌</button><button data-prompt="我准备开始专注了">准备专注</button></div>
+            <form class="chat-compose" id="chat-form"><label class="sr-only" for="chat-input">消息</label><textarea id="chat-input" rows="2" maxlength="1200" placeholder="说点什么吧……（Enter 发送，Shift + Enter 换行）"></textarea><button class="primary" id="send-chat" type="submit">发送 <span>↗</span></button></form>
+            <div class="compose-note" id="compose-note">本地模式不调用大模型；可在偏好设置中启用自己的 API。</div>
+          </div>
+        </section>
+        <section class="page" id="page-focus" aria-labelledby="focus-title">
+          <div class="page-heading"><div><span class="eyebrow">ONE THING AT A TIME</span><h1 id="focus-title">留一段时间，给眼前的事。</h1><p>步调由你。暂停、休息，都是这段时间的一部分。</p></div><span class="mode-chip">专注与休息</span></div>
+          <div class="focus-card"><div class="focus-orbits" aria-hidden="true"></div><span class="focus-caption" id="focus-caption">一起专注</span><div class="timer-ring" id="timer-ring"><div><span id="timer-display">25:00</span><small id="timer-label">准备好了，就开始吧</small></div></div><div class="timer-setup" id="timer-setup"><label>专注 <input id="focus-minutes" type="number" min="1" max="180" value="25"> 分钟</label><label>休息 <input id="break-minutes" type="number" min="1" max="60" value="5"> 分钟</label></div><div class="timer-buttons"><button class="primary" id="start-focus">开始专注</button><button class="secondary" id="start-break">休息一下</button><button class="primary" id="pause-timer" hidden>暂停</button><button class="secondary" id="cancel-timer" hidden>结束本段</button></div><p class="focus-footnote">完成时会有桌面提醒；关上小屋后，计时仍继续。</p></div>
+          <div class="focus-summary"><div><strong id="sessions-value">0</strong><span>完成的专注</span></div><span class="divider"></span><div><strong id="minutes-value">0</strong><span>累计分钟</span></div><p>不急着填满每一分钟。<br>慢慢做完一件，也很好。</p></div>
+          <div class="quiet-note">计时按实际截止时间计算；电脑睡眠或应用重启后，会在恢复时结算。</div>
+        </section>
+        <section class="page" id="page-settings" aria-labelledby="settings-title">
+          <div class="page-heading"><div><span class="eyebrow">MAKE YOURSELF COMFORTABLE</span><h1 id="settings-title">留一个舒服的位置。</h1><p>外观、动作与对话，都按你的习惯来。</p></div></div>
+          <div class="settings-card"><h2>桌面上的她 <small>更改会立即保存</small></h2>
+            <label class="range-row"><span>角色大小<small id="scale-output">100%</small></span><input type="range" data-setting="scale" min="0.65" max="1.75" step="0.05"></label>
+            <label class="range-row"><span>不透明度<small id="opacity-output">100%</small></span><input type="range" data-setting="opacity" min="0.35" max="1" step="0.05"></label>
+            <label class="range-row"><span>动作速度<small id="animationSpeed-output">1.0×</small></span><input type="range" data-setting="animationSpeed" min="0.5" max="2" step="0.1"></label>
+            <div class="toggle-grid"><label><input type="checkbox" data-setting="alwaysOnTop"><span>始终置于最前</span></label><label><input type="checkbox" data-setting="snap"><span>拖到边缘时吸附</span></label><label><input type="checkbox" data-setting="followGaze"><span>目光跟随鼠标</span></label><label><input type="checkbox" data-setting="roam"><span>沿桌面轻轻走动</span></label><label><input type="checkbox" data-setting="reduceMotion"><span>减少动态效果</span></label><label><input type="checkbox" data-setting="sound"><span>允许计时提醒声音</span></label></div>
+          </div>
+          <form class="settings-card api-card" id="api-form"><div class="section-title"><h2>对话连接</h2><label class="toggle-label"><input type="checkbox" id="api-enabled"><span>启用我的 API</span></label></div><p class="setting-help">可选 OpenAI 兼容接口。启用后，角色提示词、当前消息及最近 12 条 API 对话会发送到你指定的服务。</p>
+            <label class="field-label">接口根地址 <input type="url" id="api-endpoint" placeholder="https://api.openai.com/v1" required></label>
+            <div class="field-grid"><label class="field-label">模型名称 <input type="text" id="api-model" maxlength="100" placeholder="填写服务提供的模型 ID"></label><label class="field-label">API Key <input type="password" id="api-key" autocomplete="new-password" placeholder="留空保留已保存的密钥"></label></div>
+            <div class="api-footer"><span id="key-status">尚未保存密钥</span><button type="button" class="text-button" id="clear-key">删除已存密钥</button><button type="submit" class="primary small">保存连接</button></div>
+            <p class="setting-help">密钥通过 Windows 系统保护加密保存，不传给界面。远程地址仅接受 HTTPS；本机 localhost 支持 HTTP。</p>
+          </form>
+          <div class="about-card"><span>☽</span><div><strong>月下同伴 <small id="version-label">v1.0.0</small></strong><p id="disclaimer">非官方同人桌面应用。</p><p>双人联动为应用原创场景，不是官方新增剧情。对话面板与 API 扮演哥伦比娅，桑多涅作为桌面副角色参与。</p><p>工作状态为手动演示；未自动读取 Codex、游戏、屏幕或其他应用。</p><details><summary>资料来源</summary><p>官网人物介绍、官方归乡角色文、HoYoWiki 游戏语音与服装条目、官方节日短文及 COGNOSPHERE 后续版本公告；详细链接和证据边界见随附 CHARACTER.md 与 README.md。</p></details><details><summary>本地记录的位置</summary><code id="data-directory"></code><p>退出应用后可备份此文件夹；删除 state.json 会重置偏好与本地记录。</p></details></div></div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" hidden></div>
+</body>
+</html>
